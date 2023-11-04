@@ -19,8 +19,8 @@ public class Files {
      * @param outputFile  Nombre del archivo de salida.
      */
     public Files(String inputFile, String outputFile) {
-        this.inputFile = "./data/" + inputFile;
-        this.outputFile = "./data/resultados/" + outputFile;
+        this.inputFile = "C:\\Users\\kevin\\OneDrive\\Escritorio\\FRPB-AD-Unidad2-ProyectoCodigo2-Ficheros\\" + inputFile;
+        this.outputFile = "C:\\Users\\kevin\\OneDrive\\Escritorio\\FRPB-AD-Unidad2-ProyectoCodigo2-Ficheros\\data\\resultados\\" + outputFile;
         lstTuplas = new ArrayList<>();
     }
 
