@@ -1,8 +1,5 @@
 package HadoopMini;
 
-/*
- * Hecho por: Guillermo Baquerizo Mejia
- * */
 
 import java.io.*;
 import java.util.ArrayList;
