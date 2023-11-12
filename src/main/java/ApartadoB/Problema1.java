@@ -16,6 +16,8 @@ public class Problema1 {
 
         @Override
         public void map(Tupla elemento, ArrayList<Tupla> output) {
+	    
+	     System.out.println("Antes del map: " + elemento.getValor().toString());
             String[] words = elemento.getValor().toString().split(" ");
             for (String w : words) {
                 String new_w = w.toLowerCase().replaceAll("[^\\w]", ""); // Eliminamos los caracteres no alfanuméricos
@@ -23,6 +25,8 @@ public class Problema1 {
                     output.add(new Tupla(new_w, 1));
                 }
             }
+	    
+	    
         }
     }
 
@@ -30,9 +34,13 @@ public class Problema1 {
     static class Reduce1 implements MyReduce {
         @Override
         public void reduce(Tupla elemento, ArrayList<Tupla> output) { //El reduce se encarga de sumar los valores de la lista de tuplas
+	    
+	     System.out.println("Antes del reduce: " + elemento.getClave() + ", " + elemento.getValor());
             ArrayList<Integer> list = (ArrayList<Integer>) elemento.getValor();
             int count = list.stream().mapToInt(Integer::intValue).sum();
             output.add(new Tupla(elemento.getClave(), count));
+	    
+	    System.out.println("Después del reduce: " + output);
         }
     }
 
