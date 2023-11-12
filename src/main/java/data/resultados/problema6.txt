@@ -1,0 +1,2 @@
+Temperatura mínima,[2.02]
+Temperatura máxima,[18.74]
