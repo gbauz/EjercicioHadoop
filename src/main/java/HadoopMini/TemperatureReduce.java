@@ -14,8 +14,7 @@ import java.util.ArrayList;
 public class TemperatureReduce implements MyReduce {
 
     /**
-     * Implementación del método reduce de la interfaz MyReduce. Agrega el elemento
-     * al resultado final.
+     * Agrega el elemento al resultado final.
      */
 
     @Override
