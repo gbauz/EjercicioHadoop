@@ -10,56 +10,72 @@ import java.util.ArrayList;
  */
 public class Problema7 {
 
-    static class TristezaMapper implements MyMap {
+    /**
+     * Interfaz que define un método para determinar si una línea de datos es
+     * extremadamente triste.
+     */
+    interface HappinessAnalyzer {
+	boolean isExtremelySad(String[] lineData);
+    }
+
+    /**
+     * Analiza cada elemento y agrega las palabras extremadamente tristes al
+     * resultado.
+     */
+    static class MapImpl implements MyMap {
+
+	private final HappinessAnalyzer analyzer;
+
+	public MapImpl(HappinessAnalyzer analyzer) {
+	    this.analyzer = analyzer;
+	}
+
+	/**
+	 * Analiza cada elemento y agrega las palabras extremadamente tristes al
+	 * resultado.
+	 */
 	@Override
 	public void map(Tupla elemento, ArrayList<Tupla> output) {
-	    String[] campos = elemento.getValor().toString().split(","); // Supongamos que los datos están separados por
-									 // comas
+	    String[] line = elemento.getValor().toString().split(" ");
 
-	    if (campos.length >= 3) {
-		String palabra = campos[0];
-		double felicidadMedia = Double.parseDouble(campos[1]);
-		String twitterRank = campos[2];
+	    for (String item : line) {
+		String[] lineData = item.split("\\t");
 
-		output.add(new Tupla(palabra, felicidadMedia + "," + twitterRank));
-
+		if (analyzer.isExtremelySad(lineData))
+		    output.add(new Tupla("palabras_extremadamente_triste:", 1));
 	    }
 	}
     }
 
-    static class TristezaReducer implements MyReduce {
+    /**
+     * Determina si una línea de datos es extremadamente triste en base a ciertos
+     * criterios.
+     */
+    static class HappinessAnalyzerImpl implements HappinessAnalyzer {
+
+	/**
+	 * Determina si una línea de datos es extremadamente triste en base a ciertos
+	 * criterios.
+	 */
 	@Override
-	public void reduce(Tupla elemento, ArrayList<Tupla> output) {
-	    String palabra = (String) elemento.getClave();
-	    double felicidadTotal = 0.0;
-	    int conteo = 0;
-
-	    for (Tupla data : output) {
-		double felicidadMedia = (double) data.getValor();
-		String twitterRank = (String) data.getClave();
-
-		if (felicidadMedia < 2.0 && !twitterRank.equals("--")) {
-		    felicidadTotal += felicidadMedia;
-		    conteo++;
-		}
-	    }
-
-	    if (conteo > 0) {
-		double felicidadMediaFinal = felicidadTotal / conteo;
-		output.add(new Tupla(palabra, felicidadMediaFinal));
-	    }
+	public boolean isExtremelySad(String[] lineData) {
+	    double happinessAverage = Double.parseDouble(lineData[2]);
+	    return happinessAverage < 2 && !lineData[4].equals("--");
 	}
     }
 
     public static void main(String[] args) {
+
 	Tarea tarea = new Tarea();
 
-	// Configuración de la tarea
 	tarea.setInputFile("happiness.txt"); // Ruta del archivo txt de entrada
 	tarea.setOutputfile("palabras_muy_tristes.txt"); // Ruta del archivo de salida
-	tarea.setNode(2); // Número de nodos/reducers
-	tarea.setMapFunction(new TristezaMapper());
-	tarea.setReduceFunction(new TristezaReducer());
+	tarea.setNode(30); // Número de nodos
+	HappinessAnalyzer analyzer = new HappinessAnalyzerImpl();
+	MapImpl mapImpl = new MapImpl(analyzer);
+
+	tarea.setMapFunction(mapImpl);
+	tarea.setReduceFunction(new HappinesReduce());
 
 	// Ejecutar la tarea
 	tarea.run();
