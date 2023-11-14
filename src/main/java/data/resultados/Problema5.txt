@@ -1,0 +1,1 @@
+meteorological,[7.6,89.2,15.35]
